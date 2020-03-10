@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        jcenter { url "https://maven.aliyun.com/repository/jcenter" }
+        maven { url "https://maven.aliyun.com/repository/google" }
+        mavenCentral() // add repository
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.4'
+    }
+}
+apply plugin: 'android'
+repositories {
+    jcenter { url "https://maven.aliyun.com/repository/jcenter" }
+    maven { url "https://maven.aliyun.com/repository/google" }
+    mavenCentral() // add repository
+}
+dependencies {
+    implementation fileTree(include: '*.jar', dir: 'libs')
+//    implementation 'com.android.support:support-v4:28.1.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation files('libs\\TSPL_V1.18.jar')
+    //    implementation 'com.android.support:support-compat:28.0.0'
+}
+
+android {
+    compileSdkVersion 28
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs=['libs']
+        }
+
+        // Move the tests to tests/java, tests/res, etc...
+        androidTest.setRoot('tests')
+
+        // Move the build types to build-types/<type>
+        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
+        // This moves them out of them default location under src/<type>/... which would
+        // conflict with src/ being used by the main source set.
+        // Adding new build types or product flavors should be accompanied
+        // by a similar customization.
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    defaultConfig {
+        targetSdkVersion 28
+        minSdkVersion 19
+        versionCode 18
+        versionName "TSPL V1.18.01"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = defaultConfig.versionName +".apk"
+        }
+    }
+
+//    splits {
+//        abi {
+//            enable true
+//            reset()
+//            include 'x86', 'x86_64', 'armeabi-v7a', 'armeabi','mips'
+//            universalApk false
+//        }
+//    }
+}
